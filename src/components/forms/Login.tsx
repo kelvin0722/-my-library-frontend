@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@mui/styles';
+import React, { useEffect, useState } from 'react';
+import { makeStyles, styled } from '@mui/styles';
 import {
   Avatar,
   Button,
@@ -15,17 +15,53 @@ import {
 } from '@mui/material';
 import { LockOutlined } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
+import { AuthInput, useLoginMutation } from '../../graphql/generated/gql';
+import { useRouter } from 'next/router';
+
+const ErrorMessage = styled(Typography)({
+  color: 'red',
+  marginBottom: 2,
+});
 
 const LoginForm = () => {
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
+    getValues,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const [login, { loading, error: loginError }] = useLoginMutation();
+  const router = useRouter();
+  const emailFieldValue = getValues('email');
+  const passwordFieldValue = getValues('password');
+
+  const onSubmit = async (formData: any) => {
+    try {
+      const { data } = await login({
+        variables: {
+          input: formData,
+        },
+      });
+      localStorage.setItem;
+      if (data) {
+        localStorage.setItem('token', data?.login?.token);
+        router.push('/');
+      }
+    } catch (error: any) {
+      setError('form', {
+        type: 'server',
+        message: error.message,
+      });
+    }
   };
+
+  useEffect(() => {
+    // clear form errors
+    clearErrors('form');
+  }, [passwordFieldValue, emailFieldValue]);
 
   return (
     <Container component='main' maxWidth='xs'>
@@ -66,7 +102,9 @@ const LoginForm = () => {
               autoFocus
               {...register('email', { required: true })}
             />
-            {errors.email && <span>This field is required</span>}
+            {errors.email && (
+              <ErrorMessage>This field is required</ErrorMessage>
+            )}
             <TextField
               variant='outlined'
               margin='normal'
@@ -78,16 +116,20 @@ const LoginForm = () => {
               autoComplete='current-password'
               {...register('password', { required: true })}
             />
-            {errors.password && <span>This field is required</span>}
-            <FormControlLabel
-              control={<Checkbox value='remember' color='primary' />}
-              label='Remember me'
-            />
+            {errors.password && (
+              <ErrorMessage>This field is required</ErrorMessage>
+            )}
+            {errors.form && (
+              <ErrorMessage variant='body1'>
+                {errors.form.message as string}
+              </ErrorMessage>
+            )}
             <Button
               type='submit'
               fullWidth
               variant='contained'
               color='primary'
+              disabled={loading}
               sx={{
                 submit: {
                   margin: (theme) => theme.spacing(3, 0, 2),

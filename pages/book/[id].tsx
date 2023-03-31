@@ -1,5 +1,4 @@
 import {
-  Container,
   Box,
   Grid,
   Typography,
@@ -12,6 +11,7 @@ import { Edit } from '@mui/icons-material';
 
 import NavBar from '../../src/components/Navbar';
 import Image from 'next/image';
+import withAuth from '../../src/containers/WithAuth';
 
 const IndividualBook = () => {
   return (
@@ -110,4 +110,4 @@ const IndividualBook = () => {
   );
 };
 
-export default IndividualBook;
+export default withAuth(IndividualBook);

@@ -8,16 +8,22 @@ import {
   Box,
   FormControl,
   FormHelperText,
-  StyledComponentProps,
   Card,
   CardMedia,
   InputLabel,
   MenuItem,
   Select,
+  AlertTitle,
+  Alert,
 } from '@mui/material';
 import { styled } from '@mui/material';
 import Dropzone from 'react-dropzone';
-import { MUIStyledCommonProps } from '@mui/system';
+import {
+  Genre,
+  useAddBookMutation,
+  useUploadFileMutation,
+} from '../../graphql/generated/gql';
+import Toast from '../Toast';
 
 interface FormData {
   title: string;
@@ -25,7 +31,7 @@ interface FormData {
   coverImageUrl: string;
   description?: string;
   genre?: string;
-  file: FileList | null;
+  coverImage?: FileList | null;
 }
 
 type GetColorProps = {
@@ -55,39 +61,60 @@ const StyledForm = styled('form')(({ theme }) => ({
 }));
 
 const AddBookForm = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [coverImageUrl, setCoverImageUrl] = useState('');
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<FormData>();
 
-  const handleFormSubmit = async (data: FormData) => {
-    setIsSubmitting(true);
-    try {
-      // Upload file to cloud storage and get url
-      const fileUrl = '';
+  const [addBook, { loading: addBookLoading, error: addBookSubmissionError }] =
+    useAddBookMutation();
+  const [
+    uploadFile,
+    { loading: uploadBookLoading, error: uploadFileSubmissionError },
+  ] = useUploadFileMutation();
 
+  const isFormSubmitting = addBookLoading || uploadBookLoading;
+
+  const handleFormSubmit = async (data: FormData) => {
+    try {
+      const { data: responseData } = await await uploadFile({
+        variables: {
+          file: data.coverImage,
+        },
+      });
+
+      const coverImageUrl = responseData?.uploadFile?.url || '';
       // Submit form data (including file URL)
       const formData = {
         title: data.title,
         author: data.author,
-        coverImageUrl: data.coverImageUrl,
-        fileUrl,
+        description: data.description,
+        genre: data.genre,
+        coverImage: coverImageUrl,
       };
-      console.log(formData);
+      await addBook({
+        variables: {
+          input: formData,
+        },
+      });
     } catch (error) {
       console.error(error);
     } finally {
-      setIsSubmitting(false);
+      // reset form
+      setSubmissionSuccess(true);
+      reset();
+      setCoverImageUrl('')
     }
   };
   const handleCoverImageChange = (files: File[]) => {
     if (files.length > 0) {
       const file = files[0];
-      setValue('file', file as unknown as FileList, {
+      setValue('coverImage', file as unknown as FileList, {
         shouldValidate: true,
       });
       setCoverImageUrl(URL.createObjectURL(file));
@@ -96,9 +123,17 @@ const AddBookForm = () => {
 
   return (
     <StyledForm onSubmit={handleSubmit(handleFormSubmit)}>
+      {submissionSuccess ? (
+        <Toast
+          severity='success'
+          title='Success'
+          body='Book successfully added'
+        />
+      ) : null}
+
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography variant='h5' component='h1' gutterBottom>
+          <Typography variant='h5' component='h1' gutterBottom textAlign="center">
             Add a new book
           </Typography>
         </Grid>
@@ -145,15 +180,16 @@ const AddBookForm = () => {
               label='Genre'
               {...register('genre')}
             >
-              <MenuItem value='Fiction'>Fiction</MenuItem>
-              <MenuItem value='Thriller'>Thriller</MenuItem>
-              <MenuItem value='Documentary'>Documentary</MenuItem>
+              <MenuItem value={Genre.Fiction}>Fiction</MenuItem>
+              <MenuItem value={Genre.Nonfiction}>Non Fiction</MenuItem>
+              <MenuItem value={Genre.Romance}>Romance</MenuItem>
+              <MenuItem value={Genre.Thriller}>Thriller</MenuItem>
             </Select>
           </FormControl>
         </Grid>
 
         <Grid item xs={12}>
-          <FormControl fullWidth error={Boolean(errors.file)}>
+          <FormControl fullWidth error={Boolean(errors.coverImage)}>
             <Dropzone
               accept={{
                 'image/jpeg': [],
@@ -193,20 +229,29 @@ const AddBookForm = () => {
                 </>
               )}
             </Dropzone>
-            {errors.file && (
-              <FormHelperText>{errors.file?.message}</FormHelperText>
+            {errors.coverImage && (
+              <FormHelperText>{errors.coverImage?.message}</FormHelperText>
             )}
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Box textAlign='right'>
+          <Box
+            textAlign='right'
+            display='flex'
+            alignItems='center'
+            justifyContent='center'
+          >
             <Button
               variant='contained'
               color='primary'
               type='submit'
-              disabled={isSubmitting}
+              disabled={isFormSubmitting}
+              sx={{
+                minWidth: '10rem',
+                marginX: 5,
+              }}
             >
-              {isSubmitting ? 'Submitting...' : 'Submit'}
+              {isFormSubmitting ? 'Submitting...' : 'Submit'}
             </Button>
           </Box>
         </Grid>

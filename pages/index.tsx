@@ -1,27 +1,27 @@
-import * as React from 'react';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-
+import React from 'react';
 import NavBar from '../src/components/Navbar';
-import AuthenticationContainer from '../src/containers/Authentication';
+import AutocompleteComponent from '../src/components/Autocomplete';
+import { Container } from '@mui/material';
+import withAuth from '../src/containers/WithAuth';
 
-export default function Home() {
+const Home = () => {
   return (
     <>
       <NavBar />
-      <Container maxWidth='lg'>
-        <Box
-          sx={{
-            my: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <AuthenticationContainer />
-        </Box>
+      <Container
+        sx={{
+          display: 'flex',
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          py: 10,
+          px: 10,
+        }}
+      >
+        <AutocompleteComponent fullWidth />
       </Container>
     </>
   );
-}
+};
+
+export default withAuth(Home);
