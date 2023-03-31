@@ -8,9 +8,8 @@ import {
   IconButton,
 } from '@mui/material';
 import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
-import DeleteIcon from '@mui/icons-material/Delete';
 
-function NavBar() {
+const NavBar = () => {
   return (
     <Box
       sx={{
@@ -54,6 +53,6 @@ function NavBar() {
       </AppBar>
     </Box>
   );
-}
+};
 
 export default NavBar;
