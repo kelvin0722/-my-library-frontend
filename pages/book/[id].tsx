@@ -12,8 +12,19 @@ import { Edit } from '@mui/icons-material';
 import NavBar from '../../src/components/Navbar';
 import Image from 'next/image';
 import withAuth from '../../src/containers/WithAuth';
+import { useRouter } from 'next/router';
+import { useBookQuery } from '../../src/graphql/generated/gql';
 
 const IndividualBook = () => {
+  const router = useRouter()
+  const id = router.query.id as string;
+  const { data, loading } = useBookQuery({
+    variables: {
+      id: parseInt(id, 10)
+    },
+    skip: !router.query.id
+  })
+  console.log(data)
   return (
     <>
       <NavBar />

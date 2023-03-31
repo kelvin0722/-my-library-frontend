@@ -11,9 +11,11 @@ import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 import BookSearch from './BookSearch';
 
 import useToken from '../hooks/useToken';
+import { useRouter } from 'next/router';
 
 const NavBar = () => {
   const [token] = useToken()
+  const router = useRouter();
   return (
     <Box
       sx={{
@@ -45,16 +47,18 @@ const NavBar = () => {
                 sx={{
                   textTransform: 'none',
                 }}
+                onClick={() => router.push('../')}
               >
-                Home
+                Collection
               </Button>
               <Button
                 color='inherit'
                 sx={{
                   textTransform: 'none',
                 }}
+                onClick={() => router.push('./book/add')}
               >
-                My Books
+                Add Book
               </Button>
             </>
           ) : null}

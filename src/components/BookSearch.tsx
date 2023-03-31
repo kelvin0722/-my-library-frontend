@@ -9,12 +9,13 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 import { BookPayload, useSearchBookQuery } from '../graphql/generated/gql';
 import { Box, Typography } from '@mui/material';
+import Link from 'next/link';
 
 const AutocompleteEnhanced = styled(Autocomplete)`
   background-color: #ffff;
   width: 350px;
 
-  ${(props) => props.theme.breakpoints.down("sm")} {
+  ${(props) => props.theme.breakpoints.down('sm')} {
     width: 250px;
   }
 `;
@@ -70,17 +71,19 @@ export default function BookSearch() {
       noOptionsText='Search for books'
       getOptionLabel={(option: any) => option.name || ''}
       renderOption={(_, option: any) => (
-        <Box sx={{ display: 'flex', padding: 2 }} key={option?.title}>
-          <img
-            src={option.coverImage}
-            alt={option.title}
-            style={{ width: 50 }}
-          />
-          <Box sx={{ paddingLeft: 2 }}>
-            <Typography variant='body1'>{option.title}</Typography>
-            <Typography variant='caption'> by {option.author}</Typography>
+        <Link href={`./${option.id}`}>
+          <Box sx={{ display: 'flex', padding: 2 }} key={option?.title}>
+            <img
+              src={option.coverImage}
+              alt={option.title}
+              style={{ width: 50 }}
+            />
+            <Box sx={{ paddingLeft: 2 }}>
+              <Typography variant='body1'>{option.title}</Typography>
+              <Typography variant='caption'> by {option.author}</Typography>
+            </Box>
           </Box>
-        </Box>
+        </Link>
       )}
       filterOptions={(x) => x}
       autoComplete
