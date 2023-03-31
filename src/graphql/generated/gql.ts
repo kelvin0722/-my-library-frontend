@@ -142,12 +142,18 @@ export type Query = {
   __typename?: 'Query';
   book: Book;
   books: Array<Book>;
+  searchBook?: Maybe<Array<Maybe<BookPayload>>>;
   viewCollection: ViewCollectionPayload;
 };
 
 
 export type QueryBookArgs = {
   id: Scalars['String'];
+};
+
+
+export type QuerySearchBookArgs = {
+  term: Scalars['String'];
 };
 
 export type RatingInput = {
@@ -236,6 +242,13 @@ export type BooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type BooksQuery = { __typename?: 'Query', books: Array<{ __typename?: 'Book', id: number, title: string, author: string, coverImage?: string | null }> };
+
+export type SearchBookQueryVariables = Exact<{
+  term: Scalars['String'];
+}>;
+
+
+export type SearchBookQuery = { __typename?: 'Query', searchBook?: Array<{ __typename?: 'BookPayload', id: number, title?: string | null, author?: string | null, coverImage?: string | null } | null> | null };
 
 
 export const LoginDocument = gql`
@@ -415,3 +428,41 @@ export function useBooksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Book
 export type BooksQueryHookResult = ReturnType<typeof useBooksQuery>;
 export type BooksLazyQueryHookResult = ReturnType<typeof useBooksLazyQuery>;
 export type BooksQueryResult = Apollo.QueryResult<BooksQuery, BooksQueryVariables>;
+export const SearchBookDocument = gql`
+    query SearchBook($term: String!) {
+  searchBook(term: $term) {
+    id
+    title
+    author
+    coverImage
+  }
+}
+    `;
+
+/**
+ * __useSearchBookQuery__
+ *
+ * To run a query within a React component, call `useSearchBookQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchBookQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchBookQuery({
+ *   variables: {
+ *      term: // value for 'term'
+ *   },
+ * });
+ */
+export function useSearchBookQuery(baseOptions: Apollo.QueryHookOptions<SearchBookQuery, SearchBookQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchBookQuery, SearchBookQueryVariables>(SearchBookDocument, options);
+      }
+export function useSearchBookLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchBookQuery, SearchBookQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchBookQuery, SearchBookQueryVariables>(SearchBookDocument, options);
+        }
+export type SearchBookQueryHookResult = ReturnType<typeof useSearchBookQuery>;
+export type SearchBookLazyQueryHookResult = ReturnType<typeof useSearchBookLazyQuery>;
+export type SearchBookQueryResult = Apollo.QueryResult<SearchBookQuery, SearchBookQueryVariables>;
