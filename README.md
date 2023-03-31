@@ -1,44 +1,49 @@
-# Material UI - Next.js example in TypeScript
+# Project Title
 
-## How to use
+My Library Frontend
 
-Download the example [or clone the repo](https://github.com/mui/material-ui):
+## Demo link:
 
-<!-- #default-branch-switch -->
+The site can be accessed at:
 
-```sh
-curl https://codeload.github.com/mui/material-ui/tar.gz/master | tar -xz --strip=2  material-ui-master/examples/material-next-ts
-cd material-next-ts
-```
+- [sweepsouthconnect.com](https://sweepsouthconnect.com/)
+- [sweepsouthconnectqa.net](https://sweepsouthconnectqa.net/)
 
-Install it and run:
+## Table of Contents:
 
-```sh
-npm install
-npm run dev
-```
+- [Technologies](#technologies)
+- [Setup](#setup)
+- [Running the application](#running-the-application)
+- [Generating schemas](#generating-schemas)
 
-or:
+## Technologies
 
-<!-- #default-branch-switch -->
+Technologies used are:
 
-[![Edit on StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/mui/material-ui/tree/master/examples/material-next-ts)
+<ol>
+<li>Next js - react js service side framework. More info: [next js](https://nextjs.org/docs/getting-started)</li>
+<li>Material ui - component library inspired by google. More info: [material-ui](https://mui.com/material-ui/getting-started/installation/)</li>
+<li>Typescript - superset of javascript that provides types when writing javascript code. More info: [typescript](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html)</li>
+<li> GraphQl code generator - graphql code generator that syncs with backend graphql endpoint and generates schemas for frontend use. More info: [codegen](https://www.graphql-code-generator.com/docs/getting-started) </li>
+</ol>
 
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/mui/material-ui/tree/master/examples/material-next-ts)
+## Setup
 
-## The idea behind the example
+- Download or clone the repository
+- Run `yarn install`
 
-The project uses [Next.js](https://github.com/vercel/next.js), which is a framework for server-rendered React apps.
-It includes `@mui/material` and its peer dependencies, including [Emotion](https://emotion.sh/docs/introduction), the default style engine in Material UI v5. If you prefer, you can [use styled-components instead](https://mui.com/material-ui/guides/interoperability/#styled-components).
+## Running the application
 
-## The link component
+- Go to the root directory of the application
+- Create a `.env` file.
+- Copy the contents of `env.sample` file
+- Change `NEXT_PUBLIC_GRAPHQL_ENDPOINT` value to point to local instance of the backend server eg: NEXT_PUBLIC_GRAPHQL_ENDPOINT=http://localhost:8080/graphql/
+- Run `yarn dev` and navigate to `http://localhost:3000` to view the app
 
-The [example folder](https://github.com/mui/material-ui/tree/HEAD/examples/material-next-ts) provides an adapter for the use of [Next.js's Link component](https://nextjs.org/docs/api-reference/next/link) with MUI.
-More information [in the documentation](https://mui.com/material-ui/guides/routing/#next-js).
+## Generating schemas
 
-## What's next?
-
-<!-- #default-branch-switch -->
-
-You now have a working example project.
-You can head back to the documentation, continuing browsing it from the [templates](https://mui.com/material-ui/getting-started/templates/) section.
+- Go to the root directory of the application,
+- Open the graphql folder. You will see two files:
+  - mutations - where mutation queries are contained.
+  - queries - where queries are contained.
+- After adding a query or a mutation in either of the folders. Navigate to the root directory and run `yarn codegen`
