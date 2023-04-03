@@ -2,13 +2,6 @@
 
 My Library Frontend
 
-## Demo link:
-
-The site can be accessed at:
-
-- [sweepsouthconnect.com](https://sweepsouthconnect.com/)
-- [sweepsouthconnectqa.net](https://sweepsouthconnectqa.net/)
-
 ## Table of Contents:
 
 - [Technologies](#technologies)
@@ -37,7 +30,7 @@ Technologies used are:
 - Go to the root directory of the application
 - Create a `.env` file.
 - Copy the contents of `env.sample` file
-- Change `NEXT_PUBLIC_GRAPHQL_ENDPOINT` value to point to local instance of the backend server eg: NEXT_PUBLIC_GRAPHQL_ENDPOINT=http://localhost:8080/graphql/
+- Change `NEXT_PUBLIC_GRAPHQL_ENDPOINT` value to point to local instance of the backend server eg: `NEXT_PUBLIC_GRAPHQL_ENDPOINT=http://localhost:3000/graphql/`
 - Run `yarn dev` and navigate to `http://localhost:3000` to view the app
 
 ## Generating schemas

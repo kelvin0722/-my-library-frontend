@@ -140,9 +140,9 @@ export type MutationUploadFileArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  book: Book;
-  books: Array<Book>;
-  searchBook?: Maybe<Array<Maybe<BookPayload>>>;
+  book: BookPayload;
+  books: Array<Maybe<BookPayload>>;
+  searchBook: Array<Maybe<BookPayload>>;
   viewCollection: ViewCollectionPayload;
 };
 
@@ -243,19 +243,19 @@ export type BookQueryVariables = Exact<{
 }>;
 
 
-export type BookQuery = { __typename?: 'Query', book: { __typename?: 'Book', id: number, title: string, author: string, coverImage?: string | null } };
+export type BookQuery = { __typename?: 'Query', book: { __typename?: 'BookPayload', id: number, title?: string | null, author?: string | null, coverImage?: string | null, collectionStatus?: string | null, description?: string | null } };
 
 export type BooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type BooksQuery = { __typename?: 'Query', books: Array<{ __typename?: 'Book', id: number, title: string, author: string, coverImage?: string | null }> };
+export type BooksQuery = { __typename?: 'Query', books: Array<{ __typename?: 'BookPayload', id: number, title?: string | null, author?: string | null, coverImage?: string | null } | null> };
 
 export type SearchBookQueryVariables = Exact<{
   term: Scalars['String'];
 }>;
 
 
-export type SearchBookQuery = { __typename?: 'Query', searchBook?: Array<{ __typename?: 'BookPayload', id: number, title?: string | null, author?: string | null, coverImage?: string | null } | null> | null };
+export type SearchBookQuery = { __typename?: 'Query', searchBook: Array<{ __typename?: 'BookPayload', id: number, title?: string | null, author?: string | null, coverImage?: string | null } | null> };
 
 
 export const LoginDocument = gql`
@@ -405,6 +405,8 @@ export const BookDocument = gql`
     title
     author
     coverImage
+    collectionStatus
+    description
   }
 }
     `;

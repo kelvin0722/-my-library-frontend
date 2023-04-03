@@ -5,6 +5,7 @@ import {
   Chip,
   Rating,
   Stack,
+  Skeleton,
 } from '@mui/material';
 import React from 'react';
 import { Edit } from '@mui/icons-material';
@@ -16,15 +17,14 @@ import { useRouter } from 'next/router';
 import { useBookQuery } from '../../src/graphql/generated/gql';
 
 const IndividualBook = () => {
-  const router = useRouter()
+  const router = useRouter();
   const id = router.query.id as string;
   const { data, loading } = useBookQuery({
     variables: {
-      id: parseInt(id, 10)
+      id: parseInt(id, 10),
     },
-    skip: !router.query.id
-  })
-  console.log(data)
+    skip: !router.query.id,
+  });
   return (
     <>
       <NavBar />
@@ -48,12 +48,16 @@ const IndividualBook = () => {
               flexDirection='column'
             >
               <Grid item>
-                <Image
-                  src='/book1.jpg'
-                  alt='cleaning'
-                  width={300}
-                  height={300}
-                />
+                {loading ? (
+                  <Skeleton variant='rectangular' width={300} height={300} />
+                ) : (
+                  <Image
+                    src={data?.book?.coverImage || ''}
+                    alt='cleaning'
+                    width={300}
+                    height={300}
+                  />
+                )}
               </Grid>
               <Grid
                 item
@@ -86,24 +90,11 @@ const IndividualBook = () => {
             </Grid>
             <Grid item xs lg={4} xl={4}>
               <Grid item container flexDirection='column' marginBottom={2}>
-                <Typography variant='h3'>The Psychology of money</Typography>
-                <Typography variant='body2'>by Morgan Housel</Typography>
+                <Typography variant='h3'>{data?.book?.title}</Typography>
+                <Typography variant='body2'>{data?.book?.author}</Typography>
                 <Box sx={{ display: 'flex', marginTop: 2 }}>
                   <Typography variant='body2'>
-                    Doing well with money isn’t necessarily about what you know.
-                    It’s about how you behave. And behavior is hard to teach,
-                    even to really smart people. Money―investing, personal
-                    finance, and business decisions―is typically taught as a
-                    math-based field, where data and formulas tell us exactly
-                    what to do. But in the real world people don’t make
-                    financial decisions on a spreadsheet. They make them at the
-                    dinner table, or in a meeting room, where personal history,
-                    your own unique view of the world, ego, pride, marketing,
-                    and odd incentives are scrambled together. In The Psychology
-                    of Money, award-winning author Morgan Housel shares 19 short
-                    stories exploring the strange ways people think about money
-                    and teaches you how to make better sense of one of life’s
-                    most important topics.
+                    {data?.book?.description}
                   </Typography>
                 </Box>
               </Grid>

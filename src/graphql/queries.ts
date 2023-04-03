@@ -7,6 +7,8 @@ export const GET_BOOK = gql`
       title
       author
       coverImage
+      collectionStatus
+      description
     }
   }
 `;
